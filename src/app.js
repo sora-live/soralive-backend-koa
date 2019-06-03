@@ -4,6 +4,11 @@ import RedisStore from 'koa2-session-redis'
 
 import parseJson from './parseJson'
 import router from './router'
+import Config from './config'
+
+const config = Config.getConfig();
+console.log(config);
+
 
 const app = new Koa();
 app.keys = ['4y^AiTa&OmWZaOdMct0QBdqtVZ$qoA', 'ple&2IVT&euSFRkiuFFZ1JkqyJz&9g'];

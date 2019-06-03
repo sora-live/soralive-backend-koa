@@ -1,0 +1,14 @@
+{
+    "mysql": {
+        "host": "192.168.92.128",
+        "port": 3306,
+        "username": "sora",
+        "password": "sora",
+        "database": "sora"
+    },
+    "redis": {
+        "host": "192.168.92.128",
+        "port": 6379
+    },
+    "cookieKeys": ["4y^AiTa&OmWZaOdMct0QBdqtVZ$qoA", "ple&2IVT&euSFRkiuFFZ1JkqyJz&9g"]
+}
