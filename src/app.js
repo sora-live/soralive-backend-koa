@@ -1,24 +1,12 @@
 import Koa from 'koa'
-import session from 'koa-session'
-import RedisStore from 'koa2-session-redis'
 
+import redis from './redis'
 import parseJson from './parseJson'
 import router from './router'
-import Config from './config'
-
-const config = Config.getConfig();
-console.log(config);
-
 
 const app = new Koa();
-app.keys = ['4y^AiTa&OmWZaOdMct0QBdqtVZ$qoA', 'ple&2IVT&euSFRkiuFFZ1JkqyJz&9g'];
 
-app.use(session({
-    store: new RedisStore({
-        host: '192.168.92.128',
-        port: 6379
-    })
-}, app));
+app.use(redis);
 
 app.use(parseJson);
 

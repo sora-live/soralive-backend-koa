@@ -1,4 +1,5 @@
 {
+    "dbSync": "enabled drop",
     "mysql": {
         "host": "192.168.92.128",
         "port": 3306,
@@ -10,5 +11,5 @@
         "host": "192.168.92.128",
         "port": 6379
     },
-    "cookieKeys": ["4y^AiTa&OmWZaOdMct0QBdqtVZ$qoA", "ple&2IVT&euSFRkiuFFZ1JkqyJz&9g"]
+    "passHashKeys": ["9d(pM73Bk&d", "KotOr=i=$0ra"]
 }

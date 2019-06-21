@@ -12,11 +12,13 @@ class Config{
                 console.log("Configuration file detected. Using config.json");
                 Config.config = Object.assign(Config.config, JSON.parse(fs.readFileSync(CONFIG_OVERRIDE)));
             }else{
-                console.log("No configuration file detected. Please copy config.default.json in the src directory to config.json and modify the configuration. Using config.default.json.");
+                console.log("No configuration file detected. Please copy config.default.json to config.json and modify the configuration. Using config.default.json.");
             }
         }
         return Config.config;
     }
 }
 Config.config = null;
-export default Config;
+
+let cfg = Config.getConfig();
+export default cfg;

@@ -1,14 +1,18 @@
 import Router from 'koa-router'
 
 // 导入控制器
-import { UserReg } from './controllers/user'
+import { UserReg, PreLogin } from './controllers/user'
 
 // USER部分
 let user = new Router();
-user.post('/test', UserReg);
+user.post('/reg', UserReg);
+user.post('/prelogin', PreLogin);
 
 // 整合所有子路由
 let router = new Router();
 router.use('/user', user.routes(), user.allowedMethods());
 
-export default router;
+let rootRouter = new Router();
+rootRouter.use('/apiv2', router.routes(), router.allowedMethods());
+
+export default rootRouter;

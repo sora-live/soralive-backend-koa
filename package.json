@@ -14,9 +14,9 @@
   "dependencies": {
     "koa": "^2.7.0",
     "koa-router": "^7.4.0",
-    "koa-session": "^5.12.0",
-    "koa2-session-redis": "0.0.2",
-    "redis": "^2.8.0"
+    "mariadb": "^2.0.5",
+    "redis": "^2.8.0",
+    "sequelize": "^5.8.7"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
