@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node src/app.js",
     "build": "webpack --mode=production",
-    "debug": "webpack --mode=development",
+    "debug": "babel-node src/app --inspect --debug-brk --nolazy src/app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ted Zyzsdy",

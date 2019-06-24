@@ -11,6 +11,7 @@ class RedisConn{
         this.conn.on("error", err => {
             console.error("Redis init error: " + err);
         });
+        this.delAsync = promisify(this.conn.del).bind(this.conn);
         this.getAsync = promisify(this.conn.get).bind(this.conn);
         this.setAsync = promisify(this.conn.set).bind(this.conn);
     }
@@ -22,6 +23,9 @@ class RedisConn{
     }
     async setEx(key, value, expires){
         return await this.setAsync(key, value, 'EX', expires);
+    }
+    async del(key){
+        return await this.delAsync(key);
     }
 }
 
