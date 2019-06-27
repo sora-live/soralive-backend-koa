@@ -1,6 +1,13 @@
 import crypto from 'crypto'
 import config from '../config'
 
+export function hmac_sha1(text, pass) {
+    return crypto.createHmac('sha1', pass)
+        .update(text)
+        .digest()
+        .toString('base64');
+}
+
 export function passhash(pass) {
     return crypto.createHmac('sha1', config.passHashKeys[0])
         .update(pass + config.passHashKeys[1])
@@ -39,4 +46,11 @@ export function encryptRSA(plainb64, privateKey) {
         let encryptb64 = encryptedBuffer.toString('base64');
         res(encryptb64);
     });
+}
+
+export function streamSign(userDetail) {
+    return crypto.createHash('md5')
+        .update(`${userDetail.uid}${userDetail.streamkey}${userDetail.secretkey}${config.streamHashKey}${userDetail.pass}`)
+        .digest()
+        .toString('hex')
 }

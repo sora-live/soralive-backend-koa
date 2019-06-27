@@ -1,4 +1,5 @@
 {
+    "streaming_address": "rtmp://live.minyami.net/livesend",
     "opensslbin": "/bin/openssl",
     "dbSync": "enabled drop",
     "mysql": {
@@ -12,5 +13,6 @@
         "host": "192.168.92.128",
         "port": 6379
     },
-    "passHashKeys": ["9d(pM73Bk&d", "KotOr=i=$0ra"]
+    "passHashKeys": ["9d(pM73Bk&d", "KotOr=i=$0ra"],
+    "streamHashKey": "UpK19z%y"
 }
