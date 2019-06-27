@@ -28,7 +28,8 @@ export async function checkSign(ctx) {
     //必须包含token和sign参数
     if (await checkRequest(ctx, {
         "token": "tips.tokenNotEmpty",
-        "sign": "tips.signNotEmpty"
+        "sign": "tips.signNotEmpty",
+        "ts": "tips.timestampNotEmpty"
     })) return null;
 
     //取出userSession信息并解码

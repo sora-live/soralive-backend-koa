@@ -39,3 +39,10 @@ export async function UserDetail(ctx){
     };
     return;
 }
+
+export async function UpdateRN(ctx){
+    let userSession = await checkSign(ctx);
+    if(userSession === null) return;
+
+    
+}

@@ -129,8 +129,7 @@ export async function Login(ctx) {
 export async function Logout(ctx) {
     //检查各请求参数合法性
     if (await checkRequest(ctx, {
-        "token": "tips.tokenNotEmpty",
-        "sign": "tips.signNotEmpty"
+        "token": "tips.tokenNotEmpty"
     })) return;
     
     await ctx.redis.del(ctx.jsonRequest.token);
