@@ -2,7 +2,8 @@ import Router from 'koa-router'
 
 // 导入控制器
 import { UserReg, PreLogin, Login, Logout } from './controllers/user'
-import { UserDetail } from './controllers/userArea'
+import { UserDetail, UpdateRN, ResetUpkey, changeRoomStatus } from './controllers/userArea'
+import { GetList, GetRoomInfo } from './controllers/index'
 
 // USER部分
 let user = new Router();
@@ -11,10 +12,18 @@ user.post('/prelogin', PreLogin);
 user.post('/login', Login);
 user.post('/logout', Logout);
 user.post('/detail', UserDetail);
+user.post('/updatern', UpdateRN);
+user.post('/resetkey', ResetUpkey);
+user.post('/changestatus', changeRoomStatus);
+
+let index = new Router();
+index.post('/getlist', GetList);
+index.post('/roominfo', GetRoomInfo);
 
 // 整合所有子路由
 let router = new Router();
 router.use('/user', user.routes(), user.allowedMethods());
+router.use('/index', index.routes(), index.allowedMethods());
 
 let rootRouter = new Router();
 rootRouter.use('/apiv2', router.routes(), router.allowedMethods());

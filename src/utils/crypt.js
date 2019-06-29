@@ -54,3 +54,13 @@ export function streamSign(userDetail) {
         .digest()
         .toString('hex')
 }
+
+export function getRandomUpkey(uid){
+    const dict = "0123456789abcdef";
+    let raw_sk = "sl_" + uid.toString();
+    for(let i = 0; i < 6; i++){
+        raw_sk += dict.substr(parseInt(Math.random() * dict.length), 1);
+    }
+    
+    return raw_sk
+}
