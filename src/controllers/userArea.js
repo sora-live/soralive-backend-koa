@@ -28,7 +28,9 @@ export async function UserDetail(ctx){
         email: userDetails.email,
         description: userDetails.description,
         cover: userDetails.cover,
-        streaming: userDetails.streaming
+        streaming: userDetails.streaming,
+        privateLevel: userDetails.privateLevel,
+        privatePassword: userDetails.privatePassword
     };
 
     //计算串流码
@@ -108,6 +110,26 @@ export async function changeRoomStatus(ctx){
 
     await Models.User.update({
         streaming: ctx.jsonRequest.status
+    }, {
+        where: {
+            uid: userSession.uid
+        }
+    });
+
+    ctx.status = 200;
+    ctx.body = {
+        error: 0,
+        info: "info.success"
+    };
+}
+
+export async function UpdatePrivateLevel(ctx){
+    let userSession = await checkSign(ctx);
+    if(userSession === null) return;
+
+    await Models.User.update({
+        privateLevel: ctx.jsonRequest.privateLevel || 0,
+        privatePassword: ctx.jsonRequest.privatePassword || ""
     }, {
         where: {
             uid: userSession.uid

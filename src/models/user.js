@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize'
-import Config from '../config'
+import ModelBuild from '../utils/modelBuild'
 
 const User = (sequelize) => {
     return sequelize.define('user', {
@@ -16,7 +16,7 @@ const User = (sequelize) => {
             type: Sequelize.STRING(200),
             allowNull: false
         },
-        type: {
+        type: {  // 0 - 普通用户 1 - 可推流（开放直播间）用户 其他值未使用
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 0
@@ -28,7 +28,7 @@ const User = (sequelize) => {
         streamkey: {
             type: Sequelize.STRING(200),
         },
-        streaming: {
+        streaming: { // 0 - 不可推流（关闭直播间） 1 - 可推流（打开直播间）
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 0
@@ -50,6 +50,14 @@ const User = (sequelize) => {
         },
         cover: {
             type: Sequelize.STRING(500),
+        },
+        privateLevel: { // 0 - 无保护（任何用户均可访问） 1 - 需登录 2 - 需登录且需要输入密码
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        privatePassword: {
+            type: Sequelize.STRING(50)
         }
     }, {
         indexes: [
@@ -69,22 +77,6 @@ const User = (sequelize) => {
     });
 }
 
-const sequelize = new Sequelize(`mariadb://${Config.mysql.username}:${Config.mysql.password}@${Config.mysql.host}:${Config.mysql.port}/${Config.mysql.database}`);
-
-let UserModel = User(sequelize);
-
-if (Config.dbSync === "enabled drop"){
-    (async ()=> {
-        await sequelize.sync({
-            force: true
-        });
-        console.log("Table User has been synchronized.");
-    })();
-}else if (Config.dbSync === "enabled") {
-    (async ()=> {
-        await sequelize.sync();
-        console.log("Tabel User has been migrated.");
-    })();
-}
+let UserModel = ModelBuild(User);
 
 export default UserModel;

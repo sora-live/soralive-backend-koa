@@ -1,6 +1,6 @@
 import Models from '../models'
 import config from '../config'
-import checkRequest from '../utils/check'
+import checkRequest, { checkSign } from '../utils/check'
 
 export async function GetList(ctx){
     let streamingList = await Models.User.findAll({
@@ -33,6 +33,12 @@ export async function GetRoomInfo(ctx){
             info: "tips.userInvalid"
         };
         return;
+    }
+
+    if(userDetails.privateLevel == 1){
+        // 需要登录
+        let userSession = await checkSign(ctx);
+        if(userSession === null) return;
     }
 
     ctx.status = 200;
