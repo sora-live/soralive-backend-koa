@@ -4,6 +4,7 @@ import Router from 'koa-router'
 import { UserReg, PreLogin, Login, Logout } from './controllers/user'
 import { UserDetail, UpdateRN, ResetUpkey, changeRoomStatus } from './controllers/userArea'
 import { GetList, GetRoomInfo } from './controllers/index'
+import { OnPublish } from './controllers/server'
 
 // USER部分
 let user = new Router();
@@ -20,10 +21,14 @@ let index = new Router();
 index.post('/getlist', GetList);
 index.post('/roominfo', GetRoomInfo);
 
+let server = new Router();
+server.get('/publish', OnPublish);
+
 // 整合所有子路由
 let router = new Router();
 router.use('/user', user.routes(), user.allowedMethods());
 router.use('/index', index.routes(), index.allowedMethods());
+router.use('/rtmp_server', server.routes(), server.allowedMethods());
 
 let rootRouter = new Router();
 rootRouter.use('/apiv2', router.routes(), router.allowedMethods());

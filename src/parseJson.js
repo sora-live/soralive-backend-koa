@@ -7,6 +7,10 @@ export default async function (ctx, next) {
         ctx.set("Access-Control-Allow-Headers", "Content-Type");
     }
 
+    if(ctx.path.indexOf("rtmp_server") !== -1) {
+        return await next();
+    }
+
     if(ctx.is('application/json') === false) {
         ctx.status = 415;
         ctx.body = {message: "The backend server can only accept application/json."};
