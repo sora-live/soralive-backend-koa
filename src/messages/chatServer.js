@@ -1,6 +1,7 @@
 import { promisify } from 'util'
 import redis from 'redis'
 import Config from '../config'
+import sleep from '../utils/sleep'
 
 class ChatServer{
     constructor(){
@@ -72,6 +73,37 @@ function clean(ctx){
         }
     }
 }
+
+async function cleanOnTime(){
+    while(true){
+        await sleep(10 * 60 * 1000);
+        let count = 0;
+        let now = Date.now();
+        for(let ctx of tempCtxs){
+            if(now - ctx.wsStatus.lastTimestamp > 120 * 1000){
+                ctx.websocket.close();
+                clean(ctx);
+                count++;
+                continue;
+            }
+        }
+        //console.log(`已清理${count}个临时ws连接。`);
+        count = 0;
+        for(let channel in chatServer.ctxs){
+            for(let ctx in chatServer.ctxs[channel]){
+                if(now - ctx.wsStatus.lastTimestamp > 120 * 1000){
+                    ctx.websocket.close();
+                    clean(ctx);
+                    count++;
+                    continue;
+                }
+            }
+        }
+        //console.log(`已清理${count}个过期ws连接。`);
+    }
+}
+
+cleanOnTime();
 
 async function getSession(token){
     let userSessionJsonStr = await chatServer.get(token);
