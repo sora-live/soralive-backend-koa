@@ -38,7 +38,36 @@ export async function GetRoomInfo(ctx){
     if(userDetails.privateLevel == 1){
         // 需要登录
         let userSession = await checkSign(ctx);
-        if(userSession === null) return;
+        if(userSession === null) {
+            ctx.body.info = "tips.needLogin";
+            return;
+        }
+    }
+
+    if(userDetails.privateLevel == 2){
+        // 需要登录
+        let userSession = await checkSign(ctx);
+        if(userSession === null) {
+            ctx.body.info = "tips.needLogin";
+            return;
+        }
+        //检查请求中是否包含password
+        if (await checkRequest(ctx, {
+            "password": "tips.passwordNotEmpty",
+        })) {
+            ctx.body.error = 16;
+            return;
+        };
+
+        //检查请求中password是否和设定值一致
+        if(userDetails.privatePassword !== ctx.jsonRequest.password){
+            ctx.status = 401;
+            ctx.body = {
+                error: 17,
+                info: "tips.wrongPassword"
+            };
+            return;
+        }
     }
 
     ctx.status = 200;
