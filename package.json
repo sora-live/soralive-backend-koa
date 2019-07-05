@@ -5,7 +5,8 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/app.js",
-    "build": "webpack --mode=production",
+    "build": "babel src --out-dir dist",
+    "buildwebpack": "webpack --mode=production",
     "debug": "babel-node src/app --inspect --debug-brk --nolazy src/app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +21,7 @@
     "sequelize": "^5.8.7"
   },
   "devDependencies": {
+    "@babel/cli": "^7.5.0",
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
