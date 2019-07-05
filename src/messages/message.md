@@ -67,6 +67,7 @@ roomchat json 协议
 {
     "cmd": 3,
     "comment": {
+        "cmtId": "全局评论ID，用于跟踪评论内容复用DOM组件",
         "uname": "用户名",
         "content": "评论内容"
     }

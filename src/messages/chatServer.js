@@ -27,7 +27,7 @@ class ChatServer{
             let message = msg.message
 
             if(this.ctxs[channel] !== undefined) {
-                for(let ctx of ctxs[channel]){
+                for(let ctx of this.ctxs[channel]){
                     //检查ctx状态，如果接收到上次心跳包时间超过2min，则关闭这个连接
                     if(ctx.wsStatus === undefined || ctx.wsStatus.lastTimestamp === undefined){
                         ctx.websocket.close();
@@ -76,7 +76,7 @@ function clean(ctx){
 
 async function cleanOnTime(){
     while(true){
-        await sleep(10 * 60 * 1000);
+        await sleep(60 * 1000);
         let count = 0;
         let now = Date.now();
         for(let ctx of tempCtxs){
@@ -87,10 +87,10 @@ async function cleanOnTime(){
                 continue;
             }
         }
-        //console.log(`已清理${count}个临时ws连接。`);
+        console.log(`已清理 ${count} 个临时ws连接。临时连接还有 ${tempCtxs.length} 个`);
         count = 0;
         for(let channel in chatServer.ctxs){
-            for(let ctx in chatServer.ctxs[channel]){
+            for(let ctx of chatServer.ctxs[channel]){
                 if(now - ctx.wsStatus.lastTimestamp > 120 * 1000){
                     ctx.websocket.close();
                     clean(ctx);
@@ -99,7 +99,10 @@ async function cleanOnTime(){
                 }
             }
         }
-        //console.log(`已清理${count}个过期ws连接。`);
+        console.log(`已清理 ${count} 个过期ws连接。`);
+        for(let channel in chatServer.ctxs){
+            console.log(`Channel ${channel}, 有效连接 ${chatServer.ctxs[channel].length}个`);
+        }
     }
 }
 
@@ -126,11 +129,13 @@ function publish(channel, message){
     chatServer.pub.publish("ROOM_CHAT", JSON.stringify(sendMsg));
 }
 
-export async function roomChart(ctx) {
+let globalCmtId = 1207;
+
+export async function roomChat(ctx) {
     tempCtxs.push(ctx);
     ctx.wsStatus = {
         lastTimestamp: Date.now()
-    }
+    };
     ctx.websocket.on("message", async msg => {
         let message = JSON.parse(msg);
         if(message.cmd === undefined){
@@ -166,11 +171,19 @@ export async function roomChart(ctx) {
                         tempCtxs.splice(tempIdx, 1);
                     }
 
-                    sendJson(ctx, {
-                        cmd: 1,
-                        error: 0,
-                        info: "info.success"
-                    });
+                    if(userSession === null){
+                        sendJson(ctx, {
+                            cmd: 1,
+                            error: 1,
+                            info: "tips.invalidToken"
+                        });
+                    }else{
+                        sendJson(ctx, {
+                            cmd: 1,
+                            error: 0,
+                            info: "info.success"
+                        });
+                    }
                 }
                 break;
             case 2:
@@ -196,6 +209,7 @@ export async function roomChart(ctx) {
                         let serverMessage = {
                             cmd: 3,
                             comment: {
+                                cmtId: globalCmtId++,
                                 uname: ctx.wsStatus.userSession.uname,
                                 content: commentContent
                             }
