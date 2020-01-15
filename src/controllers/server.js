@@ -59,6 +59,17 @@ export async function OnPublish(ctx){
         return;
     }
 
+    if(userDetails.type < 1){
+        await Models.PublishLog.create({
+            addr: ctx.query.addr,
+            uid: uid,
+            info: JSON.stringify(info),
+            status: "NO_STREAMING_PRIV"
+        });
+        ctx.status = 401;
+        return;
+    }
+
     let sk = streamSign(userDetails);
     if(sk !== signedKey){
         await Models.PublishLog.create({

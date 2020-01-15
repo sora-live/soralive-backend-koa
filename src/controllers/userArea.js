@@ -1,7 +1,7 @@
 import Models from '../models'
 import config from '../config'
 import checkRequest, { checkSign } from '../utils/check'
-import { streamSign, getRandomUpkey, getRandomToken } from '../utils/crypt'
+import { passhash, streamSign, getRandomUpkey, getRandomToken } from '../utils/crypt'
 
 export async function UserDetail(ctx){
     let userSession = await checkSign(ctx);
@@ -72,6 +72,15 @@ export async function ResetUpkey(ctx){
     let userSession = await checkSign(ctx);
     if(userSession === null) return;
 
+    if(userSession.type < 1){
+        ctx.status = 403;
+        ctx.body = {
+            error: 1,
+            info: "tips.notAuth"
+        };
+        return;
+    }
+
     let raw_sk = getRandomUpkey(userSession.uid);
     let secretKey = getRandomToken();
 
@@ -136,6 +145,52 @@ export async function UpdatePrivateLevel(ctx){
         }
     });
 
+    ctx.status = 200;
+    ctx.body = {
+        error: 0,
+        info: "info.success"
+    };
+}
+
+export async function ChangePasswd(ctx){
+    let userSession = await checkSign(ctx);
+    if(userSession === null) return;
+
+    if (await checkRequest(ctx, {
+        "oldpass": "tips.oldPassNotEmpty",
+        "pass": "tips.passwordNotEmpty",
+    })) return;
+
+    //从数据库中取出该用户
+    let userDetails = await Models.User.findOne({
+        where: {
+            uid: userSession.uid
+        }
+    });
+
+    //验证原密码
+    let hashedOldpass = passhash(ctx.jsonRequest.oldpass);
+    if(userDetails.pass !== hashedOldpass){
+        ctx.status = 403;
+        ctx.body = {
+            error: 1,
+            info: "tips.oldPassWrong"
+        };
+        return;
+    }
+
+    //更新新密码
+    let hashedNewpass = passhash(ctx.jsonRequest.pass);
+    await Models.User.update({
+        pass: hashedNewpass
+    }, {
+        where: {
+            uid: userSession.uid
+        }
+    });
+
+    //注销用户，要求用户重新登录
+    await ctx.redis.del(ctx.jsonRequest.token);
     ctx.status = 200;
     ctx.body = {
         error: 0,

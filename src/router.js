@@ -18,10 +18,12 @@ user.post('/resetkey', ResetUpkey);
 user.post('/changestatus', changeRoomStatus);
 user.post('/updateprivatelevel', UpdatePrivateLevel);
 
+// 首页
 let index = new Router();
 index.post('/getlist', GetList);
 index.post('/roominfo', GetRoomInfo);
 
+// 推流
 let server = new Router();
 server.get('/publish', OnPublish);
 

@@ -165,6 +165,12 @@ export async function roomChat(ctx) {
                     }
                     chatServer.ctxs[channel].push(ctx);
 
+                    //计算在线人数
+                    let count = 0;
+                    if(chatServer.ctxs[channel] !== undefined){
+                        count = chatServer.ctxs[channel].length;
+                    }
+
                     //清理临时列表
                     let tempIdx = tempCtxs.indexOf(ctx);
                     if(tempIdx != -1){
@@ -175,13 +181,15 @@ export async function roomChat(ctx) {
                         sendJson(ctx, {
                             cmd: 1,
                             error: 1,
-                            info: "tips.invalidToken"
+                            info: "tips.invalidToken",
+                            online: count
                         });
                     }else{
                         sendJson(ctx, {
                             cmd: 1,
                             error: 0,
-                            info: "info.success"
+                            info: "info.success",
+                            online: count
                         });
                     }
                 }

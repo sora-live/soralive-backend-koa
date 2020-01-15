@@ -114,7 +114,7 @@ export async function Login(ctx) {
             sk
         }
 
-        await ctx.redis.setEx(newToken, JSON.stringify(userSession), 86400); //登录成功，Session有效期1天
+        await ctx.redis.setEx(newToken, JSON.stringify(userSession), 2592000); //登录成功，Session有效期30天
 
         ctx.status = 200;
         ctx.body = {
