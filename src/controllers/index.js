@@ -26,7 +26,7 @@ export async function GetRoomInfo(ctx){
         }
     });
 
-    if(userDetails === null || userDetails.type < 1){
+    if(userDetails === null || (userDetails.type >> 2 & 1) == 1){
         ctx.status = 400;
         ctx.body = {
             error: 1,

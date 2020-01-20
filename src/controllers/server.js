@@ -59,7 +59,7 @@ export async function OnPublish(ctx){
         return;
     }
 
-    if(userDetails.type < 1){
+    if((userDetails.type & 1) != 1){
         await Models.PublishLog.create({
             addr: ctx.query.addr,
             uid: uid,

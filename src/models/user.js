@@ -16,7 +16,7 @@ const User = (sequelize) => {
             type: Sequelize.STRING(200),
             allowNull: false
         },
-        type: {  // -1 - 被封禁 0 - 普通用户 1 - 可推流（开放直播间）用户 2 - 管理员
+        type: {  // 0-普通用户 1-可推流 2-被禁言 6-被封禁 17-管理员
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 0

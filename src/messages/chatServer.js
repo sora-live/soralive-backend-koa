@@ -87,7 +87,7 @@ async function cleanOnTime(){
                 continue;
             }
         }
-        console.log(`已清理 ${count} 个临时ws连接。临时连接还有 ${tempCtxs.length} 个`);
+        //console.log(`已清理 ${count} 个临时ws连接。临时连接还有 ${tempCtxs.length} 个`);
         count = 0;
         for(let channel in chatServer.ctxs){
             for(let ctx of chatServer.ctxs[channel]){
@@ -99,10 +99,10 @@ async function cleanOnTime(){
                 }
             }
         }
-        console.log(`已清理 ${count} 个过期ws连接。`);
-        for(let channel in chatServer.ctxs){
-            console.log(`Channel ${channel}, 有效连接 ${chatServer.ctxs[channel].length}个`);
-        }
+        //console.log(`已清理 ${count} 个过期ws连接。`);
+        //for(let channel in chatServer.ctxs){
+        //    console.log(`Channel ${channel}, 有效连接 ${chatServer.ctxs[channel].length}个`);
+        //}
     }
 }
 
@@ -177,7 +177,7 @@ export async function roomChat(ctx) {
                         tempCtxs.splice(tempIdx, 1);
                     }
 
-                    if(userSession === null){
+                    if(userSession === null || (userSession.type >> 1 & 1) == 1){
                         sendJson(ctx, {
                             cmd: 1,
                             error: 1,
@@ -212,15 +212,26 @@ export async function roomChat(ctx) {
             case 3:
                 {
                     if(ctx.wsStatus.userSession !== undefined && ctx.wsStatus.userSession !== null){
+                        let userToken = ctx.wsStatus.userSession.token;
+                        let newUserSession = await getSession(userToken);
+
+                        if(newUserSession === null || (newUserSession.type >> 1 & 1) == 1){
+                            break;
+                        }
+
                         let channel = ctx.wsStatus.channel;
                         let commentContent = message.comment.content;
                         let serverMessage = {
                             cmd: 3,
+                            cmtId: globalCmtId++,
+                            author: {
+                                uid: ctx.wsStatus.userSession.uid,
+                                uname: ctx.wsStatus.userSession.uname
+                            },
                             comment: {
-                                cmtId: globalCmtId++,
-                                uname: ctx.wsStatus.userSession.uname,
                                 content: commentContent
-                            }
+                            },
+                            createdAt: (new Date()).getTime()
                         };
                         publish(channel, serverMessage);
                     }

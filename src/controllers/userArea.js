@@ -72,7 +72,7 @@ export async function ResetUpkey(ctx){
     let userSession = await checkSign(ctx);
     if(userSession === null) return;
 
-    if(userSession.type < 1){
+    if((userSession.type & 1) == 0){
         ctx.status = 403;
         ctx.body = {
             error: 1,

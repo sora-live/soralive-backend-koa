@@ -2,7 +2,7 @@ import Router from 'koa-router'
 
 // 导入控制器
 import { UserReg, PreLogin, Login, Logout } from './controllers/user'
-import { UserDetail, UpdateRN, ResetUpkey, changeRoomStatus, UpdatePrivateLevel } from './controllers/userArea'
+import { UserDetail, UpdateRN, ResetUpkey, changeRoomStatus, UpdatePrivateLevel, ChangePasswd } from './controllers/userArea'
 import { GetList, GetRoomInfo } from './controllers/index'
 import { OnPublish } from './controllers/server'
 
@@ -17,6 +17,7 @@ user.post('/updatern', UpdateRN);
 user.post('/resetkey', ResetUpkey);
 user.post('/changestatus', changeRoomStatus);
 user.post('/updateprivatelevel', UpdatePrivateLevel);
+user.post('/changepass', ChangePasswd);
 
 // 首页
 let index = new Router();

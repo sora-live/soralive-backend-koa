@@ -67,11 +67,15 @@ roomchat json 协议
 ```json
 {
     "cmd": 3,
+    "cmtId": "全局评论ID，用于跟踪评论内容复用DOM组件",
+    "author": {
+        "uid": 13, // UID
+        "uname": "用户名"
+    },
     "comment": {
-        "cmtId": "全局评论ID，用于跟踪评论内容复用DOM组件",
-        "uname": "用户名",
         "content": "评论内容"
-    }
+    },
+    "createdAt": 100000000 //评论生成时间戳
 }
 ```
 
@@ -89,6 +93,18 @@ roomchat json 协议
 {
     "cmd": 4,
     "subCmd": 1, //子命令
-    "extraInfo" : "附加信息文本"
+    "extraInfo" : "附加信息文本",
+    "createdAt": 100000000 //指令生成时间戳
 }
 ```
+
+### 系统通知
+
+```json
+{
+    "cmd": 5,
+    "comment": {
+        "content": "系统通知内容"
+    },
+    "createdAt": 100000000 //通知生成时间戳
+}

@@ -104,6 +104,13 @@ export async function Login(ctx) {
             info: "tips.passNotMatched"
         };
         return;
+    } else if ((userDetails.type >> 2 & 1) == 1) {
+        ctx.status = 403;
+        ctx.body = {
+            error: 1,
+            info: "tips.notAuth"
+        };
+        return;
     } else {
         let newToken = getRandomToken('sha1');
         let sk = getRandomToken();
@@ -111,6 +118,7 @@ export async function Login(ctx) {
             uid: userDetails.uid,
             uname: userDetails.uname,
             type: userDetails.type,
+            token: newToken,
             sk
         }
 
