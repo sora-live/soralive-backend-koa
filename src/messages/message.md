@@ -69,7 +69,7 @@ roomchat json 协议
     "cmd": 3,
     "cmtId": "全局评论ID，用于跟踪评论内容复用DOM组件",
     "author": {
-        "uid": 13, // UID
+        "uid": 13, // UID = 0 为系统通知
         "uname": "用户名"
     },
     "comment": {
@@ -88,23 +88,13 @@ roomchat json 协议
 | 1 | 禁言 | 禁言时间（秒）（如果有） |
 | 2 | 取消禁言 | - |
 | 3 | 封禁（立即退出直播间并置为未登录状态） | - |
+| 4 | 撤回消息 | 撤回消息的全局cmtId |
 
 ```json
 {
     "cmd": 4,
     "subCmd": 1, //子命令
-    "extraInfo" : "附加信息文本",
+    "extraInfo" : 17, //附加消息内容
     "createdAt": 100000000 //指令生成时间戳
 }
 ```
-
-### 系统通知
-
-```json
-{
-    "cmd": 5,
-    "comment": {
-        "content": "系统通知内容"
-    },
-    "createdAt": 100000000 //通知生成时间戳
-}

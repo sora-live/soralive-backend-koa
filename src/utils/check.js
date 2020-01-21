@@ -64,3 +64,19 @@ export async function checkSign(ctx) {
 
     return userSession;
 }
+
+export async function checkAdmin(ctx) {
+    let userSession = await checkSign(ctx);
+    if(userSession === null) return null;
+
+    if((userSession.type >> 4 & 1) != 1){
+        ctx.status = 403;
+        ctx.body = {
+            error: 1,
+            info: "tips.notAuth"
+        };
+        return null;
+    }
+
+    return userSession;
+}

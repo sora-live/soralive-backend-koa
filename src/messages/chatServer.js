@@ -5,6 +5,7 @@ import sleep from '../utils/sleep'
 
 class ChatServer{
     constructor(){
+        this.globalCmtId = 1207;
         this.ctxs = [];
         this.redis = redis.createClient({
             host: Config.redis.host,
@@ -42,7 +43,7 @@ class ChatServer{
                     }
 
                     //否则将该信息转发给所有订阅该房间的ws
-                    sendJson(ctx, message);
+                    this.sendJson(ctx, message);
                 }
             }
         });
@@ -51,9 +52,19 @@ class ChatServer{
     async get(key){
         return await this.getAsync(key);
     }
+    async publish(channel, message){
+        let sendMsg = {
+            channel: channel,
+            message: message
+        }
+        this.pub.publish("ROOM_CHAT", JSON.stringify(sendMsg));
+    }
+    async sendJson(ctx, jsonObject){
+        ctx.websocket.send(JSON.stringify(jsonObject));
+    }
 }
 
-let chatServer = new ChatServer();
+export let chatServer = new ChatServer();
 
 let tempCtxs = [];
 
@@ -117,20 +128,6 @@ async function getSession(token){
     return userSession;
 }
 
-function sendJson(ctx, jsonObject){
-    ctx.websocket.send(JSON.stringify(jsonObject));
-}
-
-function publish(channel, message){
-    let sendMsg = {
-        channel: channel,
-        message: message
-    }
-    chatServer.pub.publish("ROOM_CHAT", JSON.stringify(sendMsg));
-}
-
-let globalCmtId = 1207;
-
 export async function roomChat(ctx) {
     tempCtxs.push(ctx);
     ctx.wsStatus = {
@@ -139,7 +136,7 @@ export async function roomChat(ctx) {
     ctx.websocket.on("message", async msg => {
         let message = JSON.parse(msg);
         if(message.cmd === undefined){
-            sendJson(ctx, {
+            chatServer.sendJson(ctx, {
                 cmd: 1,
                 error: 1,
                 info: "tips.invalidToken"
@@ -178,14 +175,14 @@ export async function roomChat(ctx) {
                     }
 
                     if(userSession === null || (userSession.type >> 1 & 1) == 1){
-                        sendJson(ctx, {
+                        chatServer.sendJson(ctx, {
                             cmd: 1,
                             error: 1,
                             info: "tips.invalidToken",
                             online: count
                         });
                     }else{
-                        sendJson(ctx, {
+                        chatServer.sendJson(ctx, {
                             cmd: 1,
                             error: 0,
                             info: "info.success",
@@ -203,7 +200,7 @@ export async function roomChat(ctx) {
                         count = chatServer.ctxs[channel].length;
                     }
 
-                    sendJson(ctx, {
+                    chatServer.sendJson(ctx, {
                         cmd: 2,
                         online: count
                     });
@@ -223,7 +220,7 @@ export async function roomChat(ctx) {
                         let commentContent = message.comment.content;
                         let serverMessage = {
                             cmd: 3,
-                            cmtId: globalCmtId++,
+                            cmtId: chatServer.globalCmtId++,
                             author: {
                                 uid: ctx.wsStatus.userSession.uid,
                                 uname: ctx.wsStatus.userSession.uname
@@ -233,7 +230,7 @@ export async function roomChat(ctx) {
                             },
                             createdAt: (new Date()).getTime()
                         };
-                        publish(channel, serverMessage);
+                        chatServer.publish(channel, serverMessage);
                     }
                 }
                 break;

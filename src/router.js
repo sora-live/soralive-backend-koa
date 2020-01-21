@@ -5,6 +5,7 @@ import { UserReg, PreLogin, Login, Logout } from './controllers/user'
 import { UserDetail, UpdateRN, ResetUpkey, changeRoomStatus, UpdatePrivateLevel, ChangePasswd } from './controllers/userArea'
 import { GetList, GetRoomInfo } from './controllers/index'
 import { OnPublish } from './controllers/server'
+import { RetractComment, UserBan, GetOnlineList } from './controllers/chatAdmin'
 
 // USER部分
 let user = new Router();
@@ -28,11 +29,18 @@ index.post('/roominfo', GetRoomInfo);
 let server = new Router();
 server.get('/publish', OnPublish);
 
+// 管理员
+let chatadmin = new Router();
+chatadmin.post('/retractcomment', RetractComment);
+chatadmin.post('/userban', UserBan);
+chatadmin.post('/online', GetOnlineList);
+
 // 整合所有子路由
 let router = new Router();
 router.use('/user', user.routes(), user.allowedMethods());
 router.use('/index', index.routes(), index.allowedMethods());
 router.use('/rtmp_server', server.routes(), server.allowedMethods());
+router.use('/chatadmin', chatadmin.routes(), chatadmin.allowedMethods());
 
 let rootRouter = new Router();
 rootRouter.use('/apiv2', router.routes(), router.allowedMethods());
