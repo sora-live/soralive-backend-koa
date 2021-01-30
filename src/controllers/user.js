@@ -2,9 +2,20 @@ import Models from '../models'
 import { passhash, getRandomToken, decryptRSA } from '../utils/crypt'
 import { getRSAPrivateKey, getRSAPublicKeyFromKeypair} from '../utils/openssl'
 import checkRequest from '../utils/check'
+import Config from './config'
 
 
 export async function UserReg(ctx) {
+    //检查是否允许注册
+    if (!Config.open_user_reg) {
+        ctx.status = 401;
+        ctx.body = {
+            error: 1,
+            info: "Registration is not open."
+        }
+        return;
+    }
+
     //检查各请求参数合法性
     if (await checkRequest(ctx, {
         "uname": "tips.usernameNotEmpty",

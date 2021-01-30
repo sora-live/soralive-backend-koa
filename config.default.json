@@ -15,5 +15,6 @@
         "port": 6379
     },
     "passHashKeys": ["9d(pM73Bk&d", "KotOr=i=$0ra"],
-    "streamHashKey": "UpK19z%y"
+    "streamHashKey": "UpK19z%y",
+    "open_user_reg": true
 }
