@@ -2,7 +2,7 @@ import Models from '../models'
 import { passhash, getRandomToken, decryptRSA } from '../utils/crypt'
 import { getRSAPrivateKey, getRSAPublicKeyFromKeypair} from '../utils/openssl'
 import checkRequest from '../utils/check'
-import Config from './config'
+import Config from '../config'
 
 
 export async function UserReg(ctx) {
