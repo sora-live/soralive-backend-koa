@@ -1,6 +1,6 @@
 {
-    "streaming_address": "rtmp://live.minyami.net/livesend",
-    "livestreaming_prefix" : "https://stream.minyami.net/streaming/",
+    "streaming_address": "rtmp://live.minyami.net/live",
+    "livestreaming_prefix" : "https://stream.minyami.net/live/",
     "opensslbin": "/bin/openssl",
     "dbSync": "enabled drop",
     "mysql": {

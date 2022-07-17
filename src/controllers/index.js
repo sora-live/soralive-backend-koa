@@ -74,7 +74,7 @@ export async function GetRoomInfo(ctx){
     ctx.body = {
         error: 0,
         uname: userDetails.uname,
-        streaming_uri: config.livestreaming_prefix + userDetails.streamkey + ".m3u8",
+        streaming_uri: config.livestreaming_prefix + userDetails.streamkey + "/hls.m3u8",
         streaming: userDetails.streaming,
         roomname: userDetails.roomname,
         description: userDetails.description

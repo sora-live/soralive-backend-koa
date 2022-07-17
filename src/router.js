@@ -4,7 +4,7 @@ import Router from 'koa-router'
 import { UserReg, PreLogin, Login, Logout } from './controllers/user'
 import { UserDetail, UpdateRN, ResetUpkey, changeRoomStatus, UpdatePrivateLevel, ChangePasswd } from './controllers/userArea'
 import { GetList, GetRoomInfo } from './controllers/index'
-import { OnPublish } from './controllers/server'
+import { OnPlay, OnPublish } from './controllers/server'
 import { RetractComment, UserBan, GetOnlineList } from './controllers/chatAdmin'
 
 // USER部分
@@ -27,7 +27,8 @@ index.post('/roominfo', GetRoomInfo);
 
 // 推流
 let server = new Router();
-server.get('/publish', OnPublish);
+server.post('/on-play', OnPlay);
+server.post('/on-publish', OnPublish);
 
 // 管理员
 let chatadmin = new Router();
@@ -39,7 +40,7 @@ chatadmin.post('/online', GetOnlineList);
 let router = new Router();
 router.use('/user', user.routes(), user.allowedMethods());
 router.use('/index', index.routes(), index.allowedMethods());
-router.use('/rtmp_server', server.routes(), server.allowedMethods());
+router.use('/server-events', server.routes(), server.allowedMethods());
 router.use('/chatadmin', chatadmin.routes(), chatadmin.allowedMethods());
 
 let rootRouter = new Router();
