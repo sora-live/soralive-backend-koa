@@ -26,11 +26,26 @@ export async function GetRoomInfo(ctx){
         }
     });
 
+    let streamType = await Models.StreamType.findOne({
+        where: {
+            uid: ctx.jsonRequest.uid
+        }
+    });
+
     if(userDetails === null || (userDetails.type >> 2 & 1) == 1){
         ctx.status = 400;
         ctx.body = {
             error: 1,
             info: "tips.userInvalid"
+        };
+        return;
+    }
+
+    if(streamType === null){
+        ctx.status = 400;
+        ctx.body = {
+            error: 1,
+            info: "tips.invalidStreamType"
         };
         return;
     }
@@ -70,11 +85,29 @@ export async function GetRoomInfo(ctx){
         }
     }
 
+    //拉流地址
+    let streamingUrl = "";
+    if (streamType.pushType === 0) {
+        let server = config.liveservers.find(x => x.id === streamType.serverId);
+        if (server) {
+            if (streamType.playType === 0){
+                streamingUrl = server.prefix + userDetails.streamkey + "/hls.m3u8"
+            } else if (streamType.playType === 1){
+                streamingUrl = server.prefix + userDetails.streamkey + ".live.flv"
+            } else if (streamType.playType === 2){
+                streamingUrl = server.prefix + userDetails.streamkey + ".live.ts"
+            }
+        }
+    } else if (streamType.pushType === 1) {
+        streamingUrl = streamType.playUrl;
+    }
+
     ctx.status = 200;
     ctx.body = {
         error: 0,
         uname: userDetails.uname,
-        streaming_uri: config.livestreaming_prefix + userDetails.streamkey + "/hls.m3u8",
+        streaming_uri: streamingUrl,
+        player_type: streamType.playType,
         streaming: userDetails.streaming,
         roomname: userDetails.roomname,
         description: userDetails.description

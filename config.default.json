@@ -1,6 +1,24 @@
 {
     "streaming_address": "rtmp://live.minyami.net/live",
     "livestreaming_prefix" : "https://stream.minyami.net/live/",
+    "liveservers": [
+        {
+            "id": "nl03",
+            "name": "Netherlands-03",
+            "rtmp": "rtmp://push-nl3.live.meamea.moe/live",
+            "prefix": "https://nl-stream.minyami.net/live/",
+            "srt": "srt://push-nl3.live.meamea.moe:12445",
+            "app": "live"
+        },
+        {
+            "id": "jp01",
+            "name": "Japan-01",
+            "rtmp": "rtmp://push-jp1.live.meamea.moe/live",
+            "prefix": "https://stream.soralive.tv/live/",
+            "srt": "srt://push-jp1.live.meamea.moe:9000",
+            "app": "live"
+        }
+    ],
     "opensslbin": "/bin/openssl",
     "dbSync": "enabled drop",
     "mysql": {

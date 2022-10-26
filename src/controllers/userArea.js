@@ -14,6 +14,12 @@ export async function UserDetail(ctx){
         }
     });
 
+    let streamType = await Models.StreamType.findOne({
+        where: {
+            uid: userSession.uid
+        }
+    });
+
     //更新session
     userSession.uname = userDetails.uname;
     userSession.type = userDetails.type;
@@ -36,6 +42,8 @@ export async function UserDetail(ctx){
     //计算串流码
     if (userDetails.streamkey !== null) {
         let skSign = streamSign(userDetails);
+        userResult.channel = userDetails.streamkey;
+        userResult.streamingid = `${userDetails.uid}:${skSign}`;
         userResult.streamkey = `${userDetails.streamkey}?streamingid=${userDetails.uid}:${skSign}`;
     }
 
@@ -43,7 +51,9 @@ export async function UserDetail(ctx){
     ctx.body = {
         error: 0,
         user: userResult,
-        streaming_address: config.streaming_address
+        streaming_address: config.streaming_address,
+        server_list: config.liveservers,
+        stream_type: streamType
     };
     return;
 }
@@ -60,6 +70,36 @@ export async function UpdateRN(ctx){
             uid: userSession.uid
         }
     });
+
+    ctx.status = 200;
+    ctx.body = {
+        error: 0,
+        info: "info.success"
+    };
+}
+
+export async function UpdateStreamKey(ctx){
+    let userSession = await checkSign(ctx);
+    if(userSession === null) return;
+
+    let oldStreamType = await Models.StreamType.findOne({
+        where: {
+            uid: userSession.uid
+        }
+    });
+
+    if (!oldStreamType) {
+        await Models.StreamType.create({
+            uid: userSession.uid,
+            ...ctx.jsonRequest
+        });
+    } else {
+        await Models.StreamType.update(ctx.jsonRequest, {
+            where: {
+                uid: userSession.uid
+            }
+        });
+    }
 
     ctx.status = 200;
     ctx.body = {
