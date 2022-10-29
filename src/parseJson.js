@@ -5,6 +5,7 @@ export default async function (ctx, next) {
         ctx.status = 204;
         ctx.set("Access-Control-Allow-Method", "POST");
         ctx.set("Access-Control-Allow-Headers", "Content-Type");
+        return;
     }
 
     if(ctx.is('application/json') === false) {
