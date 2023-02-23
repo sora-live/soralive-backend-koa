@@ -18,7 +18,7 @@
     "koa-websocket": "^6.0.0",
     "mariadb": "^2.5.2",
     "redis": "^3.0.2",
-    "sequelize": "^6.5.0"
+    "sequelize": "^6.28.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
